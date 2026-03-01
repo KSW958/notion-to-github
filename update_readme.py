@@ -7,7 +7,7 @@ from datetime import datetime, timezone, timedelta
 # [사용자 설정 영역]
 # =======================================================
 
-SAVE_DIR_ROOT = "TIL" 
+SAVE_DIR_ROOT = "NOTE" 
 NOTION_PROPERTY_TITLE = "제목"
 NOTION_PROPERTY_DATE = "날짜"
 README_FILE = ""
