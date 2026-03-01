@@ -1,0 +1,295 @@
+### 예약(Booking) 관리 화면: 외부 포맷터 + 고객·예약 데이터 로드 실습
+- 고객 정보와 예약 정보를 JSON 파일에서 불러오고, “Booking GO” 버튼을 눌렀을 때만 선택한 고객의 예약 내역이 아래 테이블에 표시되며, 외부 포맷터 파일을 불러와 나이에 따라 구분(성인/청소년/아동)을 표시하는 실습.
+</br>
+
+<img width="730" height="307" alt="image" src="https://github.com/user-attachments/assets/342316c4-d70c-49e9-bea7-aee7a6013822" />
+</br>
+</br>
+
+<img width="717" height="331" alt="image" src="https://github.com/user-attachments/assets/a45c0485-e42b-49ac-8474-88384254ed43" />
+</br>
+</br>
+
+<img width="730" height="343" alt="image" src="https://github.com/user-attachments/assets/76805edd-876f-4ef2-b814-2e31b9bc98ab" />
+</br>
+</br>
+</br>
+
+- model/Customers.json
+```java
+{
+    "company" : {
+        "name" : "Acme Inc.",
+        "street" : "23 Franklin St.",
+        "city" : "Claremont",
+        "state" : "New Hampshire",
+        "zip" : "03301",
+        "revenue" : "1833990"
+    }
+}
+```
+</br>
+
+- model/Customers.json
+```java
+{
+    "Customers": [
+        { "CustomerName" : "장원영", "Age" : 12, "PhoneNumber" : "010-5421-5942", 
+        "_Bookings" : [ { "AirlineID" : "AA", "FlightDate" : "2024-02-11", "BookingNumber": "2011", "Price":1000, "Currency":"EUR", "seatsMax": 500, "seatsOcc":450 },
+                        { "AirlineID" : "AA", "FlightDate" : "2024-02-13", "BookingNumber": "2012", "Price":2000, "Currency":"EUR", "seatsMax": 500, "seatsOcc":500 },
+                        { "AirlineID" : "GL", "FlightDate" : "2024-05-11", "BookingNumber": "2190", "Price":1500, "Currency":"EUR", "seatsMax": 500, "seatsOcc":500 },
+                        { "AirlineID" : "AZ", "FlightDate" : "2024-05-11", "BookingNumber": "2191", "Price":1510, "Currency":"EUR", "seatsMax": 500, "seatsOcc":100 } ] },
+
+        { "CustomerName" : "김우빈", "Age" : 17, "PhoneNumber" : "010-2166-5854" ,
+        "_Bookings" : [ { "AirlineID" : "AA", "FlightDate" : "2024-02-11", "BookingNumber": "3111", "Price":3000, "Currency":"USD", "seatsMax": 500, "seatsOcc":0 },
+                        { "AirlineID" : "JL", "FlightDate" : "2024-05-13", "BookingNumber": "3222", "Price":3200, "Currency":"USD", "seatsMax": 500, "seatsOcc":100 },
+                        { "AirlineID" : "GL", "FlightDate" : "2024-07-11", "BookingNumber": "3335", "Price":2100, "Currency":"USD", "seatsMax": 500, "seatsOcc":320 } ] },
+
+        { "CustomerName" : "유재석", "Age" : 25, "PhoneNumber" : "010-1421-122",
+        "_Bookings" : [ { "AirlineID" : "JL", "FlightDate" : "2024-03-11", "BookingNumber": "4217", "Price":5000, "Currency":"USD", "seatsMax": 500, "seatsOcc":425 },
+                        { "AirlineID" : "AA", "FlightDate" : "2024-04-13", "BookingNumber": "4589", "Price":6000, "Currency":"USD", "seatsMax": 500, "seatsOcc":300 },
+                        { "AirlineID" : "GL", "FlightDate" : "2024-05-11", "BookingNumber": "5874", "Price":2500, "Currency":"USD", "seatsMax": 500, "seatsOcc":489 },
+                        { "AirlineID" : "AZ", "FlightDate" : "2024-05-11", "BookingNumber": "5875", "Price":1200, "Currency":"EUR", "seatsMax": 500, "seatsOcc":120 },
+                        { "AirlineID" : "AA", "FlightDate" : "2024-05-11", "BookingNumber": "5876", "Price":5800, "Currency":"EUR", "seatsMax": 500, "seatsOcc":50 } ] }
+    ]
+}
+```
+</br>
+
+- model/formatter.js
+```java
+sap.ui.define([], function() {
+    "use strict"
+
+    return {
+        fnFormatter: function(sValue) {
+            debugger;
+            let result;
+            // formatter 사용시 if문으로 value가 있는 경우를 체크하여
+            // 처리하는게 좋다. value 값만 들어오는게 아니기 때문
+            if(sValue) {    
+                let oModel = this.getView().getModel("customer");
+
+                if(sValue >= 20) result = "성인";
+                else if(sValue >= 17 && sValue < 19) result = "중학생";
+                else if(sValue >= 14 && sValue < 17) result = "초등학생";
+                else if(sValue >= 8 && sValue < 14) result = "초등학생";
+                else result = "아동";
+                return result;
+            }
+        },
+        setStringData: function() {
+            // 포메터 함수 추가
+        }
+    }
+})
+```
+</br>
+
+- Booking.controller.js
+```java
+sap.ui.define([
+    "sap/ui/core/mvc/Controller",
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/core/Fragment",
+    "ycl2project082/model/formatter"
+], (Controller, JSONModel, Fragment, formatter) => {
+    "use strict";
+
+    return Controller.extend("ycl2project082.controller.Booking", {
+        formatFile : formatter,
+        onInit() {
+            let oModel = new JSONModel();
+            oModel.loadData(sap.ui.require.toUrl("ycl2project082/model/data.json"));
+            this.getView().setModel(oModel, "main");
+
+            // this.byId("idVBox").bindElement("/company");    // 이름없는 기본모델
+            this.byId("idVBox2").bindElement({
+                path : "/company",
+                model : "main"
+            });
+
+            let cModel = new JSONModel();
+            cModel.loadData(sap.ui.require.toUrl("ycl2project082/model/Customers.json"));
+            this.getView().setModel(cModel, "customer");
+
+            /////////////////// 2025-10-31: Booking 모델 분리 //////////////////////
+            this.getView().setModel(new JSONModel({ result : [] }), "booking");
+        },
+        onReadBooking: function(oEvent) {
+            let table = this.byId("idCustomers2");  // this.byId 사용해서 Customers 테이블 가져오기
+            let oRow = table.getSelectedItem();     // 현재 선택한 아이템 정보 들어옴   
+
+            let oBindingContext = oRow.getBindingContext("customer");
+            let sPath = oBindingContext.getPath();
+            let oCustomer = this.getView().getModel("customer").getProperty(sPath);
+
+            let oBookingModel = this.getView().getModel("booking");
+            oBookingModel.setProperty("/result", oCustomer._Bookings);
+        },
+        onPress: function(oEvent) {
+            // oEvent.getSource() : 버튼객체
+            let oRow = oEvent.getSource().getParent();
+            // oRow : 버튼 객체의 위에 있는 UI control (listItem 또는 Row)을 가져옴
+            let oBindingContext = oRow.getBindingContext("customer");   // 유재석 Row에 바인딩된 전체정보 가져온 것
+            // oBindingContext : 바인딩 객체. 내부에 모델정보, 현재 경로 등이 있음
+            let sPath = oBindingContext.getPath();
+            // 전체 바인딩 정보 중, 경로만 특정해서 가져옴
+            let oModel = this.getView().getModel("customer");
+            let oData = oModel.getProperty(sPath);  
+            // 모델 경로를 통해 가져온 모델 객체(유재석)
+            // 따라서 oData.PhoneNumber로 접근하면 특정 데이터를 얻을 수 있음
+            sap.m.MessageToast.show(oData.PhoneNumber);
+        },
+        // sap.m.Table 에서 Row 데이터 선택시 실행하는 이벤트(selectionChange)
+        onSelectionChange: function(oEvent) {
+            // 이벤트 함수는 이벤트 객체가 파라미터로 들어온다
+            // 이벤트 객체는 이벤트마다 다르다
+            // .getSource : 이벤트를 일으킨 객체
+            // .getParameters : 이벤트에 들어있는 파라미터 정보 (요게 다름)
+            let oBindingContext = oEvent.getParameters().listItem.getBindingContext("customer");
+            let sPath = oBindingContext.getPath();  // 현재 선택한 Item의 모델 경로
+
+            this.byId("idBookings2").setBindingContext(oBindingContext, "customer");
+        },
+        // onChange: function(oEvent) {
+        //     // input의 value를 얻음
+        //     let iValue = Number(oEvent.getParameter("value"));
+        //     let oInput = oEvent.getSource();
+
+        //     if(iValue < 0 || iValue > 100) {
+        //         oInput.setValueState("Error");
+        //         oInput.setValueStateText("0 부터 100 사이 숫자만 입력하세요.");
+        //         // return;     // 리턴구문 만나면 함수 종료
+        //     }
+        //     else {
+        //         // Input 처음에 생성했을 때 Input의 ValueState는 "None" (default state)
+        //         oInput.setValueState("None");
+        //         oInput.setValueState(ValueState.None);
+        //     }
+        // }
+    });
+});
+```
+</br>
+
+- Booking.view.xml
+```html
+<mvc:View controllerName="ycl2project082.controller.Booking"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m">
+    <!-- core:require="{formatter: 'ycl2project082/model/formatter'}" -->
+    <Page title="2025-10-30 화면">
+        <Text binding="{/company}" text="{state}" />
+        
+        <!-- <VBox id="idVBox" class="sapUiSmallMargin" binding="{/company}"> -->
+        <VBox id="idVBox2" class="sapUiSmallMargin">
+            <Text text="VBox안에 데이터 : {main>name}" />
+            <Text text="VBox안에 데이터 : {main>street}" />
+            <Text text="VBox안에 데이터 : {main>city}" />
+            <Text text="VBox안에 데이터 : {main>state}" />
+        </VBox>
+
+        <Table id="idCustomers2"
+            inset="false"
+            mode="SingleSelectLeft"
+            selectionChange="onSelectionChange"
+            items="{customer>/Customers}">
+            <headerToolbar>
+                <OverflowToolbar>
+                    <content>
+                        <Title text="Customers" level="H2"/>
+                        <ToolbarSpacer />
+                        <Button text="Booking GO" press="onReadBooking"/>
+                    </content>
+                </OverflowToolbar>
+            </headerToolbar>
+            <columns>
+                <Column hAlign="Center">
+                    <Text text="CustomerName" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="Age" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="구분" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="PhoneNumber" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="Button" />
+                </Column>
+            </columns>
+            <items>
+                <ColumnListItem vAlign="Middle">
+                    <cells>
+                        <Text text="{customer>CustomerName}" />
+                        <Input value="{
+                            path : 'customer>Age',
+                            type : 'sap.ui.model.type.Integer',
+                            constraints : {minimum: 0, maximum: 100}
+                            
+                        }" change=".onChange" />
+                        <!-- 
+                        만약 formatter를 view에서 불러온다면, 앞에 .제거
+                        -->
+                        <Text text="{
+                            path : 'customer>Age',
+                            formatter : '.formatFile.fnFormatter'
+                        }" />
+                        <Text text="{customer>PhoneNumber}" />
+                        <!-- Expression Binding -->
+                        <Button text="Detail" visible="{= ${customer>Age} >=20 }" press="onPress" />
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+
+        <Table class="sapUiSmallMarginTop" id="idBookings2" items="{booking>/result}">
+            <columns>
+                <Column hAlign="Center">
+                    <Text text="AirlineID" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="AFlightDatege" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="Booking Number" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="Price" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="Currency" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="seatsMax" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="seatsOcc" />
+                </Column>
+                <Column hAlign="Center">
+                    <Text text="State" />
+                </Column>
+            </columns>
+            <items>
+                <ColumnListItem vAlign="Middle">
+                    <cells>
+                        <Text text="{booking>AirlineID}" />
+                        <Text text="{booking>FlightDate}" />
+                        <Text text="{booking>BookingNumber}" />
+                        <Text text="{booking>Price}" />
+                        <Text text="{booking>Currency}" />
+                        <Text text="{booking>seatsMax}" />
+                        <Text text="{booking>seatsOcc}" />
+                        <Text text="{= ${booking>seatsMax} - ${booking>seatsOcc} === 0  ? '만석' 
+                        : ${booking>seatsMax} - ${booking>seatsOcc} &lt; 10 ? '모집중-출발확정' : '모집중-출발미정' }" />
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+    </Page>
+</mvc:View>
+```

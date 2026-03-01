@@ -1,0 +1,1067 @@
+# 10/21, 10/22 기록
+- FIORI -> ABAP -> RAP 순서로 배움
+- ctrl + / : 전체 주석 처리
+</br>
+
+# 1. 웹 기초 구조 (HTML / CSS / JavaScript)
+</br>
+
+- HTML : 웹페이지 골격
+- CSS : 웹페이지 스타일
+- JAVASCRIPT: 동적 기능 구현
+</br>
+
+- 태그는 <열림>과 </닫힘> 형태로 작성됨
+- 예 : ```<p>안녕하세요</p>```
+- ```<br />, <img />, <meta />``` : 열림과 닫힘을 한 줄로 표현
+</br>
+
+- html안에 head, body 태그가 있음
+- <body> 안에는 Header(H), Content(C), Footer(F) 영역으로 나뉨
+- Script가 맨 아래에 위치
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>
+        JavaScript Language Basics
+    </title>
+</head>
+
+<body>
+
+<!-- Page Conetent -->
+    <script>
+        alert("Hello World");
+    </script>
+</body>
+</html>
+```
+</br>
+</br>
+
+---
+</br>
+
+# 2. 기본 출력 / 입력 함수
+</br>
+
+- 메시지 박스를 띄워 내용을 알림창으로 출력
+- 사용자가 확인 버튼을 눌러야 넘어감
+```java
+alert("Hello world");  
+```
+</br>
+
+- 주석처리
+```java
+// 한 줄 주석
+/* 여러 줄 주석 */
+```
+</br>
+
+### < 입력 관련 함수 >
+### 1) prompt
+- 사용자에게 값을 입력받음
+- 입력창이 팝업으로 뜨고, 사용자가 값을 입력하면 그 결과를 문자열로 반환
+- 123 넣어도 문자열로 123 나옴. 계산하고 싶을 때는 숫자로 변환해야 함.
+```java
+prompt("메시지", "기본값");        // 기본값: 입력창 안에 미리 표시될 값
+```
+```java
+let name = prompt("이름을 입력하세요:");
+alert("안녕하세요, " + name + "님!");
+
+let city = prompt("사는 도시를 입력하세요", "서울");
+console.log(city);
+```
+</br>
+
+### 2) confirm
+- 사용자에게 확인/취소를 선택하게 하는 팝업창을 띄우는 함수
+- 선택 결과를 true(확인)/false(취소)로 반환
+```java
+confirm("메시지");
+```
+```java
+let result = confirm("정말 삭제하시겠습니까?");        // 확인 클릭 → true, 취소 클릭 → false
+console.log(result);
+```
+</br>
+</br>
+
+---
+</br>
+
+# 3. 변수
+- 변수: 값을 저장하기 위한 메모리 공간의 이름
+</br>
+
+### 1) var
+- 가장 기본적인 변수 선언 키워드. 오래된 코드에서 볼 수 있음.
+- 변수는 콤마로 여러개 할당 가능
+```java
+var 변수명;
+var 변수명 = 값;
+```
+- 중복 선언 가능. 재할당 가능. 덮어쓰기 문제 발생할 수 있음.
+```java
+var result = "A";      // 값 할당
+var result = "B";  // 재선언 (가능)
+console.log(result); // "B" 출력
+```
+- 스코프(유효 범위)는 함수 단위. {} 블록 구분 X.
+```java
+if (true) {
+  var x = 10;
+}
+console.log(x);     // 10 : 블록 밖에서도 접근 가능
+```
+</br>
+
+### 2) let
+- var의 단점을 보완해 새로 추가된 변수 선언 방식.
+```java
+let 변수명;
+let 변수명 = 값;
+```
+- 중복 선언 불가능. 재할당 가능.
+```java
+let name = "철수";
+let name = "영희";     // ❌ 에러
+
+let age = 20;
+age = 25;             // 가능
+```
+- 스코프(유효 범위)는 블록 단위
+```java
+if (true) {
+  let a = 10;
+  console.log(a);     // 10
+}
+console.log(a);       // ❌ 에러 (블록 밖에서 접근 불가)
+```
+</br>
+
+### 3) const
+- 한 번 정해진 값이 절대 바뀌지 않도록 하는 변수
+- 상수를 선언할 때 사용하며, 선언과 동시에 반드시 값을 할당해야 함
+```java
+const 변수명 = 값;
+```
+- 재선언 불가능, 재할당 불가능
+```java
+const companyCode = "HQ00";
+console.log(companyCode);         // "HQ00"
+
+companyCode = "BR01";             // ❌ 에러 (상수 값 변경 불가)
+```
+- let처럼 스코프(유효 범위)는 블록 단위
+- 선언할 때 반드시 초기값이 필요함
+```java
+const x;         // ❌ 에러 (초기값 없이 선언 불가)
+```
+</br>
+</br>
+
+### 1) 전역 변수
+- 프로그램 전체에서 접근 가능한 변수
+```java
+var a = 10;
+function test() {
+  console.log(a);         // 10 (전역 접근 가능)
+}
+```
+
+
+### 2) 지역 변수
+- 특정 블록 {} 안에서만 접근 가능한 변수
+```java
+function test() {
+  let b = 20;
+  console.log(b);         // 20
+}
+console.log(b);           // ❌ 에러 (지역 변수는 블록 밖에서 접근 불가)
+```
+</br>
+
+### "use strict"
+- "use strict"를 코드 맨 위에 쓰면 엄격 모드(Strict Mode)가 활성화
+```java
+"use strict";
+x = 10;             // ❌ 에러 (var/let/const 없이 선언 불가)
+```
+</br>
+
+### < 자료형 >
+```java
+let vString = "문자열";	// “ 또는 ‘ 안에 들어감
+let vNumber = 123;	// 숫자 타입
+let vBoolean = false;	// true(1) 또는 false(0)
+let vNull = null;		// 빈 값(이라는 걸 할당한 상태)
+let vUndefined = undefined;	// 값을 할당하지 않음
+
+console.log(vString, vNumber, vBoolean, vNull, vUndefined);
+```
+- "문자열" 123 false null undefined 콘솔 창에 출력
+
+</br>
+</br>
+
+---
+</br>
+
+# 4. 비교
+- 논리연산자 : && (AND), || (OR), ! (NOT) (false, 0, "", null, undefined, NaN)
+- 삼항연산자 : (조건) ? true일 때 실행 : false일 때 실행
+- 산술연산자 : + - * / % **(제곱)
+- 할당연산자 : =
+- 대입연산자 : += -= *= /= %=
+- 증감연산자 : i++, ++i, i--, --i
+- 비교 연산자 : a > b, a < b, a >= b, a <= b, a == b, a === b, a != b, a !== b 
+</br>
+
+- 아래 =는 대입 연산자
+```java
+a=1
+```
+- 비교 연산자의 결과는 true나 false 중의 하나(boolean)
+
+```java
+alert(1==2)             //false
+alert(1==1)             //true
+alert("one"=="two")     //false 
+```
+</br>
+
+### ==
+- 서로 값이 같다면 true 다르다면 false
+```java
+alert(1==2)             //false
+alert(1==1)             //true
+alert("one"=="two")     //false 
+alert("one"=="one")     //true
+```
+
+### ===
+- 일치 연산자로 값이 정확하게 같을 때 true 다르면 false
+- 서로 같은 수를 표현하고 있더라도 데이터 형이 같은 경우에만 같다고 판단
+```java
+alert(1=='1');              //true
+alert(1==='1');             //false
+```
+- null은 값이 없음을 명시적으로 표시한 것이고, undefined는 값이 정의되어 있지 않은 것
+- NaN은 0/0과 같은 연산의 결과로 만들어지는 특수한 데이터 형 (숫자 x)
+```java
+alert(null == undefined);       //true
+alert(null === undefined);      //false
+alert(true == 1);               //true
+alert(true === 1);              //false
+alert(true == '1');             //true
+alert(true === '1');            //false
+ 
+alert(0 === -0);                //true
+alert(NaN === NaN);             //false
+```
+</br>
+
+### !=
+- ! 는 부정을 의미 (같지 않다)
+```java
+alert(1!=2);            //true
+alert(1!=1);            //false
+alert("one"!="two");    //true
+alert("one"!="one");    //false
+```
+
+### !==
+- 정확하게 같지 않다는 의미
+</br>
+
+### >
+- 좌항이 우항보다 크다면 참, 그렇지 않다면 거짓
+```java
+alert(10>20);   //false
+alert(10>1);    //true
+alert(10>10);   //false
+```
+
+### >=
+- 좌항이 우항보다 크거나 같음
+```java
+alert(10>=20);      //false
+alert(10>=1);       //true
+alert(10>=10);      //true
+```
+</br>
+
+### typeof
+```java
+alert(typeof "1")
+```
+- 문자이므로 string 출력
+
+```java
+alert(typeof 1)
+```
+- 숫자이므로 number 출력
+
+</br>
+</br>
+
+---
+</br>
+
+# 5. 조건문
+
+### < 조건문이란? >
+- Boolean(불린): true와 false
+```java
+if (조건) {
+                  // 참일 때 실행
+} else {
+                  // 거짓일 때 실행
+}
+```
+```java
+if(true){
+    alert('result : true');        // result : true 출력
+}
+
+if(false){
+    alert('result : true');        // 아무것도 출력되지 않음
+}
+```
+</br>
+
+### < switch 문 >
+- 하나의 변수 값을 여러 case로 나눔
+- case에는 break 꼭 필요 (없으면 아래 case까지 계속 실행됨)
+```java
+switch (변수) {
+  case 값1:
+    // 실행할 코드
+    break;
+  case 값2:
+    // 실행할 코드
+    break;
+  default:
+    // 위에 해당하는 case가 없을 때 실행
+}
+```
+```java
+let day = 2;
+
+switch (day) {
+  case 1:
+    console.log("월요일");
+    break;
+  case 2:
+    console.log("화요일");
+    break;
+  default:
+    console.log("그 외 요일");
+}
+```
+
+- 여러 개의 case 사용 가능
+```java
+let day = 2;
+
+switch (day) {
+  case 1: case 2:   // 1이나 2일 때 만족 ( || )
+    console.log("월요일");
+    break;
+  default:
+    console.log("그 외 요일");
+}
+```
+</br>
+
+### < 내부적으로 false 값을 갖는 것들 >
+- 0, false, “”(빈 문자열), null, undefined, NaN (Not a Number)
+```java
+if(!''){
+    alert('빈 문자열')    // `빈 문자열` 출력
+}
+if(!undefined){
+    alert('undefined');    // `undefined` 출력
+}
+var a;
+if(!a){
+    alert('값이 할당되지 않은 변수');     // `값이 할당되지 않은 변수` 출력
+}
+if(!null){
+    alert('null');    // `null` 출력
+}
+if(!NaN){
+    alert('NaN');    // `NaN` 출력
+}
+```
+</br>
+</br>
+
+---
+</br>
+
+# 6. 반복문
+### 1) while
+- 조건을 먼저 검사하고, 참이면 실행
+```java
+while (조건){
+    반복해서 실행할 코드
+}
+```
+```java
+var i = 0;                                        // 종료조건으로 i의 값이 10보다 작다면 true, 같거나 크다면 false가 된다.
+while(i < 10){
+    document.write('coding everybody <br />');    // 반복이 실행될 때마다 coding everybody <br />이 출력된다. <br /> 줄바꿈을 의미하는 HTML 태그
+    i++                                           // i의 값이 1씩 증가한다.
+}
+```
+- coding everybody이 10번 출력
+</br>
+
+### 2) do-while
+- 조건을 나중에 검사하고, 참이면 실행
+```java
+do {
+  // 반복할 코드
+} while (조건);
+```
+```java
+let i = 1;
+
+do {
+  console.log(i);    // 출력: 1 2 3
+  i++;
+} while (i <= 3);
+```
+</br>
+
+### 3) for
+- 반복할 횟수가 정해져 있을 때 쓰는 반복문
+```java
+for(초기화; 반복조건; 반복이 될 때마다 실행되는 코드){
+    반복해서 실행될 코드
+}
+```
+```java
+for(var i = 0; i < 10; i++){
+    document.write('coding everybody'+i+'<br />');        // 'coding everybody + i 가 10번 출력
+}
+```
+</br>
+
+### 4) for in
+- 객체의 속성(key) 또는 배열의 인덱스를 하나씩 꺼낼 때 사용하는 반복문
+```java
+for (let 변수 in 객체) {
+  // 변수는 key (속성 이름)
+}
+```
+</br>
+
+```java
+var grades = {'egoing': 10, 'k8805': 6, 'sorialgi': 80};
+for(key in grades) {
+    document.write("key : "+key+" value : "+grades[key]+"<br />");
+}
+```
+- 출력
+```
+key :   egoing value : 10
+key :   k8805 value : 6
+key :   sorialgi value : 80
+```
+</br>
+
+```java
+var arr = ['a', 'b', 'c'];
+for(var name in arr) {
+    document.write(name);
+}
+```
+- 012 출력 (배열에도 적용 가능)
+
+</br>
+</br>
+
+---
+</br>
+
+# 7. 배열
+
+- 여러 개의 데이터를 하나의 변수에 저장하기 위한 것
+- 각각의 데이터를 원소라고 함
+- 인덱스는 0부터 시작
+```java
+let arr = [];  
+let arr2 = ["값1", 1000, false, null];
+```
+- 값 변경
+```java
+arr2[0] = "안녕하세요";
+arr2[5] = "반가워요";
+console.log(arr2[5]);         // "반가워요" 출력
+```
+</br>
+
+### < 객체 배열 >
+```java
+let person = [
+  {"name" : "홍길동", age : 20 },        // 길이 3
+  {"name" : "박근철", age : 23 },
+  {"name" : "김형동", age : 10 }
+]
+```
+</br>
+
+### filter()
+- 배열에서 조건에 맞는 데이터들을 새로운 배열로 리턴
+- 원본 배열은 변하지 않음
+- 이외에도 .map() .reduce() .some()가 있음
+
+```java
+배열.filter(function(요소) {
+  return 조건;
+});
+
+배열.filter(요소 => 조건);
+```
+</br>
+
+- 예제 1: 짝수만 골라내기
+```java
+const numbers = [1, 2, 3, 4, 5, 6];
+const evens = numbers.filter(num => num % 2 === 0);
+console.log(evens);  // 출력 : [2, 4, 6]
+
+const numbers = [1, 2, 3, 4, 5, 6];
+const evens = numbers.filter(function(num) {
+  return num % 2 === 0;
+});
+console.log(evens);  // 출력 : [2, 4, 6]
+```
+
+- 예제 2: 이름이 2글자인 사람만
+```java
+const names = ["영희", "철수", "꽃", "민준", "유"];
+const result = names.filter(name => name.length === 2);
+console.log(result);  // ["철수", "지우", "민준"]
+
+const names = ["영희", "철수", "꽃", "민준", "유"];
+const result = names.filter(function(name) {
+  return name.length === 2;
+});
+console.log(result);  // ["철수", "지우", "민준"]
+```
+
+</br>
+</br>
+
+---
+</br>
+
+# 8. 객체 & 내장객체
+</br>
+
+### < 객체 >
+- 이름(key)과 값(value)으로 이루어진 데이터 묶음
+
+```java
+let obj = {};      // 빈 객체
+let obj = { key: value, key2: value2 };
+```
+
+- obj.name 또는 obj["name"] 두 가지 방식 모두 가능
+```java
+let person = {
+  "name": "홍길동",
+  "age": 25
+};
+
+console.log(person.name);     // "홍길동"
+console.log(person.age);      // 25
+
+console.log(person["name"]);  // "홍길동"
+console.log(person["age"]);   // 25
+
+console.log(person.hi)    // undefined
+person.hi = "Hello";
+console.log(person.hi);    // "Hello"
+```
+- 객체 안에 다양한 자료형 저장 가능
+```java
+let obj = {
+  "name": "이름",
+  "age": 20,
+  "obj2": {},                   // 객체 안의 객체
+  "arr2": [],                   // 객체 안의 배열
+  "sleep": function() {         // 함수(메서드)
+    console.log("잠자기");
+  }
+};
+obj.sleep();                    // "잠자기"
+obj.sleep;                      // True
+```
+</br>
+
+### < 내장 객체 >
+- 자바스크립트가 기본으로 제공하는 객체들로, 별도 선언 없이 바로 사용할 수 있음.
+- String (문자열 객체)
+- Number (숫자 객체)
+- Boolean (논리 객체)
+- Array (배열 객체)
+- Date (날짜 객체)
+- Math (수학 관련)
+- Object (모든 객체의 기본 형태)
+</br>
+
+### 원시 타입 vs 객체 타입
+1) 원시 타입
+- String, number, Boolean, null, undefined
+- "문자" → 원시 타입(단순한 값)
+</br>
+
+2) 객체 타입
+- array [], object {}
+- new String("문자") → 객체 타입(String 객체)
+- 자바스크립트는 원시 타입도 내부적으로 자동으로 객체처럼 감싸서(wrapping) 처리함
+```java
+var str = "문자";
+console.log(str.length);     // 2
+```
+- "문자"가 자동으로 new String("문자")로 감싸져서 .length 사용이 가능
+</br>
+
+### 1) Date 객체 (날짜 / 시간)
+- 날짜와 시간을 다룰 수 있는 자바스크립트 내장 객체
+- String() : 문자열로 변환, Number() : 숫자로 변환
+- 숫자 + 문자열 : 숫자를 문자열로 변환해버림
+- `${}` : 안의 값을 문자열로 변경해 줌
+```java
+let oDate = new Date();
+
+let year = oDate.getFullYear();
+let month = oDate.getMonth() + 1;
+let day = oDate.getDate();
+
+console.log(year + "-" + month + "-" + day);    // 출력: 2025-10-21
+console.log(String(year) + "-" + String(month) + "-" + String(day));    // 출력: 2025-10-21
+console.log(${year}-${month}-${day});    // 출력: 2025-10-21
+```
+</br>
+
+### 2) Array 객체
+</br>
+
+### < 배열에 원소 추가하기 >
+### push
+- 배열의 끝에 한 개 이상의 원소를 추가
+```java
+var li = ['a', 'b', 'c', 'd', 'e'];        // a, b, c, d, e, f 출력 (한 번에)
+li.push('f');
+alert(li);
+```
+```java
+var li = ['a', 'b', 'c', 'd', 'e'];        // a, b, c, d, e, a, f 출력 (한 번에)
+li.push('a', 'f');
+alert(li);
+```
+</br>
+
+### concat
+- 두 개 이상의 배열을 합침
+```java
+var li = ['a', 'b', 'c', 'd', 'e'];        // a, b, c, d, e, f, g 출력 (한 번에)
+li = li.concat(['f', 'g']);
+alert(li);
+```
+```java
+var arr1 = [1, 2];
+var arr2 = [3, 4];
+arr1=arr1.concat(arr2);        // 1, 2, 3, 4 출력 (한 번에)
+alert(arr1);
+```
+</br>
+
+### unshift
+- 배열의 시작점에 한 개 이상의 원소를 추가
+```java
+var li = ['a', 'b', 'c', 'd', 'e'];        // z, a, b, c, d, e 출력 (한 번에)
+li.unshift('z');
+alert(li);
+```
+```java
+var li = ['a', 'b', 'c', 'd', 'e'];        // a, z, a, b, c, d, e 출력 (한 번에)
+li.unshift('a', 'z');
+alert(li);
+```
+</br>
+
+### splice
+- `array.splice(startIndex, deleteCount, item1, item2, ...);`
+- startIndex: 변경을 시작할 배열 인덱스 (0부터 시작)
+- deleteCount: 삭제할 요소 개수 (0이면 삭제 안 함)
+- item1, item2, ...: 삭제 후 그 위치에 추가할 요소들 (생략 가능
+</br>
+
+```java
+var li = ['a', 'b', 'c', 'd', 'e'];        // a, b, B, c, d, e 출력 (삭제 요소 0, 인덱스 2부터 B 추가) (한 번에)
+li.splice(2, 0, 'B');
+alert(li);
+
+var li = ['a', 'b', 'c', 'd', 'e'];        // a, b, B, C 출력 (삭제 요소 3, 인덱스 2부터 B, C 추가) (한 번에)
+li.splice(2, 3, 'B', 'C');
+alert(li);
+```
+
+```java
+var numbers = [1,2,3,4,5,6,7,8,9,10];
+alert(numbers.splice(2));                     // array, [3,4,5,6,7,8,9,10], 시작점 2부터 배열의 마지막 원소까지를 대상으로 한다.
+alert(numbers);                               // array, [1,2], 원본이 수정된다.
+
+var numbers = [1,2,3,4,5,6,7,8,9,10];
+alert(numbers.splice(2, 4));             // array, [3,4,5,6]
+alert(numbers);                          // array, [1,2,7,8,9,10]
+
+var numbers = [1,2,3,4,5,6,7,8,9,10];
+alert(numbers.splice(2, 4, 'three', 'four', 'five', 'six'));         // array, [3,4,5,6]
+alert(numbers);                                                      // array, [1,2,three,four,five,six,7,8,9,10]
+```
+</br>
+
+### < 배열에 원소 제거하기 >
+### shift
+- 배열의 첫 번째 원소 제거
+```java
+var li = ['a', 'b', 'c', 'd', 'e'];
+console.log(li.shift());        // 출력: a
+alert(li);
+```
+- b, c, d, e 출력 (한 번에)
+</br>
+
+### pop
+- 배열의 마지막 원소 제거
+```java
+var li = ['a', 'b', 'c', 'd', 'e'];
+li.pop();
+alert(li);
+```
+- a, b, c, d 출력 (한 번에)
+</br>
+
+### < 배열 안 원소 정렬하기 >
+### 정렬
+```java
+var li = ['c', 'e', 'a', 'b', 'd'];
+li.sort();
+alert(li);
+```
+- a, b, c, d, e 출력 (한 번에)
+</br>
+
+### 역순
+```java
+var li = ['c', 'e', 'a', 'b', 'd'];
+li.reverse();
+alert(li);
+```
+- d, b, a, e, c 출력 (한 번에))
+
+</br>
+</br>
+
+### 3) Number 객체
+- String() : 문자열로 변환
+- toString() : 문자열로 변환, 괄호 꼭 써야함
+```java
+let number = 100.56;
+console.log(number);                // 100.56
+console.log(String(number));        // "100.56"
+console.log(number.toString());     // "100.56"
+console.log((3.14).toString());     // "3.14"
+```
+</br>
+
+- 숫자를 문자열로 변환하면서, 소수점 이하 자릿수를 지정
+- 반올림도 자동으로 해줌
+```java
+let num = 3.14159;
+
+console.log(num.toFixed(2));    // "3.14"
+console.log(num.toFixed(0));    // "3"   (소수점 없이 반올림)
+console.log(num.toFixed(4));    // "3.1416"
+```
+</br>
+
+- isNaN() : 인자로 받은 값을 숫자로 변환한 후, 그 값이 NaN이면 true 반환
+- Number.isNaN() : 인자가 엄격하게 NaN인지만 검사 (형 변환 안 함)
+```java
+console.log(0/0);         // NaN
+console.log("안녕"/0);    // NaN
+
+let num = 0/0;
+console.log(isNaN(num));            // true
+console.log(Number.isNaN(num));     // true
+```
+</br>
+
+### 4) 그 외 함수(join, split, length)
+### join
+- 배열의 원소들을 하나의 문자열로 연결할 때 사용
+- 구분자를 지정해서 각 요소 사이에 넣을 수 있음
+```java
+let arr = [5, 6, 7, 8];        
+let str = arr.join('-');        // 출력: "5-6-7-8"
+alert(str);
+
+let fruits = ['사과', '배', '포도'];
+alert(fruits.join(', '));             // 출력: "사과, 배, 포도"
+```
+</br>
+
+### split
+- 특정 구분자 기준으로 잘라서 배열로 변환
+```java
+let str = "5-6-7-8";
+let arr = str.split('-');        // 출력: 5,6,7,8 (배열 형태로 저장됨)
+alert(arr);
+
+let text = "JavaScript is fun";
+let result = text.split(' ');        // "JavaScript,is,fun"
+alert(result);  
+```
+</br>
+
+### length 속성
+- 배열의 길이(요소 개수)를 반환
+- 함수가 아니라 속성임 → 뒤에 괄호() 안 씀
+```java
+let arr = [5, 6, 7, 8];    // 인덱스: 0 ~ 3
+alert(arr.length);         // 출력: 4
+```
+</br>
+
+### replace
+- 문자열에서 특정 문자열을 다른 문자열로 바꿀 때 사용
+- 새로운 문자열을 반환, 원본 문자열은 변경되지 않음
+```java
+let str = "Hello World";
+let result = str.replace("World", "이름");      // 출력: "Hello 이름"
+alert(result);       
+```
+</br>
+
+### toUpperCase()
+- 문자열을 모두 대문자로 변환
+- 반환값은 새 문자열 (원본은 변경되지 않음)
+```java
+let str = "hello world";
+let upperStr = str.toUpperCase();    // 출력: "HELLO WORLD"
+alert(upperStr);    
+```
+</br>
+
+### toLowerCase()
+- 문자열을 모두 소문자로 변환
+- 반환값은 새 문자열 (원본은 변경되지 않음)
+```java
+let str = "HELLO WORLD";
+let lowerStr = str.toLowerCase();    // 출력: "hello world"
+alert(lowerStr);    
+```
+</br>
+
+### trim()
+- 문자열의 앞뒤에 있는 공백(띄어쓰기, 줄바꿈, 탭 등)을 제거
+- 문자열 중간의 공백은 그대로 유지
+```java
+let str = "   Hello World   ";
+let trimmed = str.trim();
+
+alert(trimmed);   // 출력: "Hello World"
+```
+
+</br>
+</br>
+</br>
+
+---
+</br>
+
+# 9. 함수
+</br>
+
+### 함수
+- function + 함수 이름 + 소괄호
+- return 뒤에 따라오는 값을 함수의 결과로 반환. 동시에 함수를 종료시킴.
+- return은 필수 아님. 안쓸 경우 undefined를 반환.
+- 매개변수 개수 맞춰야 함. 안넣고싶으면 null이나 undefined.
+- 매개변수(parameter) : 함수를 정의할 때 함수가 받아들이는 입력값을 의미하는 변수
+- 인자(argument) : 함수로 유입되는 입력 값
+```java
+function 함수명( 매개변수 ){
+   코드
+   return 반환값;
+}
+
+함수명(인자);
+```
+</br>
+
+```java
+function numbering(){
+    i = 0;
+    while(i < 10){
+        document.write(i);    // 0123456789 출력
+        i += 1;
+    }   
+}
+numbering()
+```
+</br>
+
+- return 값은 하나만 가질 수 있음
+```java
+function get_arguments(arg1, arg2){
+    return arg1 + arg2
+}
+ 
+alert(get_arguments(10, 20));
+alert(get_arguments(20, 30));        // 30, 50 출력
+```
+</br>
+
+- 실습1
+- 매개변수로 3개의 문자열을 받아서 한 줄의 문자열을 반환하는 함수 getString을 작성
+```java
+function getString(str1, str2, str3) {
+  let string = str1 + str2 + str3
+  return String(string);
+}
+
+console.log(getString("안녕","하세요","!"));
+console.log(getString(1,2,3));
+```
+</br>
+
+- 실습2
+```java
+let obj = {
+  "name" : "책상",
+  "price" : 5000,
+  "cnt" : 4
+};
+
+function getTotal (a, b) {
+  return a*b;
+}
+console.log("총 합계: " + getTotal(obj.price, obj.cnt));
+```
+```java
+function getTotalString(total) {
+  console.log("합계는 " + total + "원 입니다.");
+} 
+
+function getTotal (a, b) {
+  getTotalString(a*b);
+}
+
+getTotal(obj.price, obj.cnt);
+```
+```java
+let obj = {
+  "name" : "책상",
+  "price" : 5000,
+  "cnt" : 4
+};
+
+function getTotal (price, cnt) {
+  let result = getTotalString(price*cnt);
+  return result;
+}
+
+function getTotalString(total) {
+  return `합계는 ${total}원 입니다.`;
+} 
+
+console.log(getTotal(obj.price, obj.cnt));
+```
+</br>
+
+### 1) 함수 선언식
+- 가장 기본적인 함수 선언 방법
+```java
+function 함수이름(매개변수) {
+  // 로직
+}
+
+함수이름(인자);
+```
+```java
+function sayHello() {
+  console.log("안녕하세요!");
+}
+sayHello();   
+```
+</br>
+
+### 2) 함수 표현식
+- 함수도 변수처럼 저장할 수 있음.
+- 함수 이름이 없을 수도 있어서 익명 함수라고도 부름.
+```java
+const 함수이름 = function(매개변수) {
+  // 로직
+};
+
+함수이름(인자);
+```
+```java
+let greet = function() {
+  console.log("반가워요!");
+};
+greet(); 
+```
+</br>
+
+### 3) 즉시 실행 함수
+- 함수를 정의하자마자 바로 실행하는 함수
+```java
+(function(매개변수) {
+  // 로직
+})(인자);
+```
+```java
+(function() {
+  console.log("바로 실행됨!");
+})();
+```
+</br>
+
+### 4) 화살표 함수
+```java
+const 함수이름 = (매개변수) => {
+  // 로직
+};
+
+함수이름(인자);
+```
+```java
+const hi = () => {
+  console.log("Hi!");
+};
+hi(); 
+```
+</br>
+
+### 5) 즉시 실행 화살표 함수
+```java
+((aa) => {
+  console.log(aa);
+})(2000);
+```
