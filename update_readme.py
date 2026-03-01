@@ -10,7 +10,7 @@ from datetime import datetime, timezone, timedelta
 SAVE_DIR_ROOT = "TIL" 
 NOTION_PROPERTY_TITLE = "제목"
 NOTION_PROPERTY_DATE = "날짜"
-README_FILE = "README.md"
+README_FILE = ""
 MARKER_START = ""
 MARKER_END = ""
 TIMEZONE_HOURS = 9 
